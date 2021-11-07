@@ -8,7 +8,7 @@ Sistema simples de controle de livraria em C
 -  categoria.dat:  para  o  cadastro  das  categorias  de  livros,  contendo  os  seguintes  dados: código da categoria, descrição da categoria (por exemplo: romance, ficção, policial, biografias, direito, informática, etc.); 
 -  editora.dat:  para  o  cadastro  das  editoras,  contendo  os  seguintes  dados:  código,  nome, contato, fone, e-mail. 
 
-### O programa deverá implementar as seguintes tarefas:   O programa deverá implementar as seguintes tarefas: 
+### O programa deverá implementar as seguintes tarefas:  
 - Cadastro de Livros, autores, categorias e editoras; 
 - Listar todos os Livros, Autores, Categorias e Editoras; 
 - Exclusão de Categorias (Remoção Física do registro); 

@@ -2,9 +2,7 @@
 #include <string.h>
 #include <time.h>
 
-#define LIVROS "Livros.dat"
-#define CLIENTES "Clientes.dat"
-#define VENDAS "Vendas.dat"
+
 
 /*código, título, preço, código do autor1, código do autor2,
 código do autor3, código do autor4, código da categoria (assunto),
@@ -45,6 +43,115 @@ struct reg_editora{
   char fone[50];
   char email[50];
 };
+void ListarTodosEditoras(){
+    FILE *fpeditora;
+    struct reg_editora editora;
+    //Abrir o Arquivo
+    fpeditora = fopen("editora.dat","rb");
+    printf("\n      * * *  Relatorio de Todos as Editora  * * *\n");
+    //Ler registro por registro
+    int a =0 ;
+    while (fread(&editora,sizeof(editora),1,fpeditora)==1)
+    {
+        //Mostrar na Tela
+        printf("\n\n__________________________________________");
+        printf("\nRegistro Numero %i",a);
+        a++;
+        printf("\nCodigo editora: %i",editora.pkeditora);
+        printf("\nNome: %s",editora.nome);
+        printf("\nContato: %s",editora.contato);
+        printf("\nFone: %s",editora.fone);
+        printf("\nEmail: %s",editora.email);
+    }
+    //Fechar arquivo
+    fclose(fpeditora);
+    char opc;
+    fflush(stdin);
+    scanf("%c",&opc);
+}//Fim ListarTodosEditores
+
+void ListarTodasCategorias(){
+    FILE *fpcategoria;
+    struct reg_categoria categoria;
+    //Abrir o Arquivo
+    fpcategoria = fopen("categoria.dat","rb");
+    printf("\n      * * *  Relatorio de Todos as Categorias * * *\n");
+    //Ler registro por registro
+    int a =0 ;
+    while (fread(&categoria,sizeof(categoria),1,fpcategoria)==1)
+    {
+        //Mostrar na Tela
+        printf("\n\n__________________________________________");
+        printf("\nRegistro Numero %i",a);
+        a++;
+        printf("\nCodigo categoria %i",categoria.pkcategoria);
+        printf("\nsobrenome: %s",categoria.descricaocategoria);
+    }
+    //Fechar arquivo
+    fclose(fpcategoria);
+    char opc;
+    fflush(stdin);
+    scanf("%c",&opc);
+}//Fim ListarTodasCategorias
+void ListarTodosAutores(){
+    FILE *fpautor;
+    struct reg_autor autor;
+    //Abrir o Arquivo
+    fpautor = fopen("autor.dat","rb");
+    printf("\n\n      * * *  Relatorio de Todos os Autores  * * *\n");
+    //Ler registro por registro
+    int a =0 ;
+    while (fread(&autor,sizeof(autor),1,fpautor)==1)
+    {
+        //Mostrar na Tela
+        printf("\n__________________________________________");
+        printf("\nRegistro Numero %i",a);
+        a++;
+        printf("\nCodigo autor %i",autor.pkautor);
+        printf("\nsobrenome: %s",autor.sobrenome);
+        printf("\nnome: %s",autor.nome);
+    }
+    //Fechar arquivo
+    fclose(fpautor);
+    char opc;
+    fflush(stdin);
+    scanf("%c",&opc);
+}//Fim ListarTodosAutores
+
+void ListarTodosLivros()
+{
+    FILE *fplivro;
+    struct reg_livro livro;
+    //Abrir o Arquivo
+    fplivro = fopen("livro.dat","rb");
+    printf("\n      * * *  Relatorio de Todos os Livros  * * *\n");
+    //Ler registro por registro
+    int a =0 ;
+    while (fread(&livro,sizeof(livro),1,fplivro)==1)
+    {
+        //Mostrar na Tela
+        printf("\n\n__________________________________________");
+        printf("\nRegistro Numero %i",a);
+        a++;
+        printf("\nCodigo livro %i",livro.pklivro);
+        printf("\n Titulo: %s",livro.titulo);
+        printf("\n Preco: %f",livro.preco);
+        printf("\n Codigo autor 1: %i",livro.codautor1);
+        printf("\n Codigo autor 2: %i",livro.codautor2);
+        printf("\n Codigo autor 3 %i",livro.codautor3);
+        printf("\n Codigo autor 4 %i",livro.codautor4);
+        printf("\n Codigo Categoria: %i",livro.codcategoria);
+        printf("\n Codigo editora: %i",livro.codeditora);
+        printf("\n Edicao: %i",livro.edicao);
+        printf("\n Ano: %i",livro.ano);
+        printf("\n Quantidade em estoque: %i",livro.qtdestoque);
+    }
+    //Fechar arquivo
+    fclose(fplivro);
+    char opc;
+    fflush(stdin);
+    scanf("%c",&opc);
+}//Fim listarTodosLivros()
 
 void CadastrarLivro(){
   FILE *fplivro;
@@ -87,7 +194,7 @@ void CadastrarLivro(){
 
   //Gravar os dados no Arquivo
   //-> Abrir o Arquivo
-  fplivro = fopen("livro.dat","ab");
+  fplivro = fopen("livro.dat","a+");
   //-> Gravar
   fwrite(&livro,sizeof(livro),1,fplivro);
   //-> Fechar
@@ -121,7 +228,7 @@ void CadastrarAutor(){
   }
   //Gravar os dados no Arquivo
   //-> Abrir o Arquivo
-  fpautor = fopen("autor.dat","ab");
+  fpautor = fopen("autor.dat","a+");
   //-> Gravar
   fwrite(&autor,sizeof(autor),1,fpautor);
   //-> Fechar
@@ -155,7 +262,7 @@ void CadastrarCategoria(){
   }
   //Gravar os dados no Arquivo
   //-> Abrir o Arquivo
-  fpcategoria = fopen("categoria.dat","ab");
+  fpcategoria = fopen("categoria.dat","a+");
   //-> Gravar
   fwrite(&categoria,sizeof(categoria),1,fpcategoria);
   //-> Fechar
@@ -196,7 +303,7 @@ void CadastrarEditora(){
   }
   //Gravar os dados no Arquivo
   //-> Abrir o Arquivo
-  fpcategoria = fopen("editora.dat","ab");
+  fpeditora = fopen("editora.dat","a+");
   //-> Gravar
   fwrite(&editora,sizeof(editora),1,fpeditora);
   //-> Fechar
@@ -206,27 +313,7 @@ void CadastrarEditora(){
 }//Fim CadastrarEditora()
 
 
-void listarTodosLivros(){
-  FILE *fplivro;
-  struct reg_livro livro;
 
-  //Abrir o Arquivo
-  fplivro = fopen(LIVROS,"rb");
-
-  printf("\n      * * *  Relatorio de Todos os Livros  * * *\n");
-  printf("\nCodigo Titulo                         Preco");
-  //Ler registro por registro
-  while (fread(&livro,sizeof(livro),1,fplivro)==1){
-    //Mostrar na Tela
-    printf("\n %-6i %-30s %5.2f",livro.pklivro,livro.titulo, livro.preco);
-
-  }
-
-
-  //Fechar arquivo
-  fclose(fplivro);
-
-}//Fim listarTodosLivros()
 
 void consultarPeloCodigo(){
   FILE *fplivro;
@@ -238,7 +325,7 @@ void consultarPeloCodigo(){
   fflush(stdin); scanf("%i",&cod);
 
   //Abrir o Arquivo
-  fplivro = fopen(LIVROS,"rb");
+  fplivro = fopen("livro.dat","rb");
 
   //Localizar o Livro que tenha o código procuradp
   while ((achou==0)&&(fread(&livro,sizeof(livro),1,fplivro)==1)){
@@ -271,7 +358,7 @@ void consultarPeloTitulo(){
   fflush(stdin); gets(tit);
 
   //Abrir o Arquivo
-  fplivro = fopen(LIVROS,"rb");
+  fplivro = fopen("livro.dat","rb");
 
   //Localizar o Livro que tenha o título procurado
   while ((achou==0)&&(fread(&livro,sizeof(livro),1,fplivro)==1)){
@@ -305,7 +392,7 @@ void consultarPalavraTitulo(){
   fflush(stdin); gets(palavra);
 
   //Abrir o Arquivo de Livros
-  fplivro = fopen(LIVROS,"rb");
+  fplivro = fopen("livro.dat","rb");
 
   //Ler registro por registro e comparar se aparece a palavra no titulo e mostrar
   while (fread(&livro,sizeof(livro),1,fplivro)==1){
@@ -372,7 +459,7 @@ void alterarLivro(){
   fflush(stdin); scanf("%i",&cod);
 
   //Abrir o Arquivo
-  fplivro = fopen(LIVROS,"rb+");
+  fplivro = fopen("livro.dat","rb+");
 
   //Localizar o Livro que tenha o código procuradO
   while ((achou==0)&&(fread(&livro,sizeof(livro),1,fplivro)==1)){
@@ -438,7 +525,7 @@ void excluirLivro(){
   fflush(stdin); scanf("%i",&cod);
 
   //Abrir o Arquivo
-  fplivro = fopen(LIVROS,"rb");
+  fplivro = fopen("livro.dat","rb");
 
   //Localizar o Livro que tenha o código procuradO
   while ((achou==0)&&(fread(&livro,sizeof(livro),1,fplivro)==1)){
@@ -472,7 +559,7 @@ void excluirLivro(){
   //Excluir o Registro do Livro
 
   //Copiar todos os registros (menos aquele a ser removido) para um arquivo temporario
-  fplivro = fopen(LIVROS,"rb");
+  fplivro = fopen("livro.dat","rb");
   fplivrosnew = fopen("livrosnew.dat","wb");
   while(fread(&livro,sizeof(livro),1,fplivro)==1){ //Le do arquivo original
     if (livro.pklivro!=cod)
@@ -487,26 +574,6 @@ void excluirLivro(){
   printf("\nLivro Excluido com Sucesso.");
 }//Fim excluirLvro()
 
-void listarTodosAutores(){
-  FILE *fpautor;
-  struct reg_autor autor;
-
-  //Abrir o Arquivo
-  fpautor = fopen("autor.dat","rb");
-
-  printf("\n      * * *  Relatorio de Todos os Clientes  * * *\n");
-  printf("\nCodigo Nome                                Fone           Email                    ");
-  //Ler registro por registro
-  while (fread(&autor,sizeof(autor),1,fpautor)==1){
-    //Mostrar na Tela
-    printf("\n%-6i %-35s %-14s ",autor.pkautor,autor.nome,autor.sobrenome);
-  }
-
-
-  //Fechar arquivo
-  fclose(fpautor);
-
-}//Fim listarTodosClientes()
 
 /*
 struct reg_cliente localizarClientePeloCodigo(int codcli){
@@ -743,6 +810,29 @@ void listarVendasTXT(){
 }//Fim listarVendasTXT()
 
 */
+/*
+void OLDlistarTodosAutores(){
+  FILE *fpautor;
+  struct reg_autor autor;
+
+  //Abrir o Arquivo
+  fpautor = fopen("autor.dat","rb");
+
+  printf("\n      * * *  Relatorio de Todos os Clientes  * * *\n");
+  printf("\nCodigo Nome                                Fone           Email                    ");
+  //Ler registro por registro
+  while (fread(&autor,sizeof(autor),1,fpautor)==1){
+    //Mostrar na Tela
+    printf("\n%-6i %-35s %-14s ",autor.pkautor,autor.nome,autor.sobrenome);
+  }
+
+
+  //Fechar arquivo
+  fclose(fpautor);
+
+}//Fim listarTodosClientes()
+
+*/
 
 main(){
   int op;
@@ -768,7 +858,7 @@ Observações:
 */
   do{
 
-    printf("\n\n    # # #  Livraria do Saber  # # # \n");
+    printf("\n\n    # # #  BIBLIOTECA DE ALEXANDRIA  # # # \n");
     printf("\n 1) Cadastro de Livro");
     printf("\n 11) Cadastro de Autor");
     printf("\n 12) Cadastro de Categoria");
@@ -802,16 +892,16 @@ Observações:
             CadastrarEditora();//feito
             break;
         case 2:
-            //ListarTodosLivros();
+            ListarTodosLivros();//feito
             break;
         case 21:
-            //ListarTodosAutores();
+            ListarTodosAutores();//feito
             break;
         case 22:
-            //ListarTodasCategorias();
+            ListarTodasCategorias();//feito
             break;
         case 23:
-           // ListarTodosEditores();
+            ListarTodosEditoras();//feito
             break;
         case 3:
            // ExcluirCategoria();

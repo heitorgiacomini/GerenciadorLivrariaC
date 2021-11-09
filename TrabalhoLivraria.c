@@ -43,6 +43,102 @@ struct reg_editora{
   char fone[50];
   char email[50];
 };
+
+void ConsultarLivroPalavraChaveNoTitulo(){
+  FILE *fplivro;
+  struct reg_livro livro;
+  char palavra[30];
+  int achou=0;
+
+
+  //Solcitar a Palavra-Chave
+  printf("\nDigite a Palavra-Chave: ");
+  fflush(stdin); gets(palavra);
+
+  //Abrir o Arquivo de Livros
+  fplivro = fopen("livro.dat","rb");
+
+  //Ler registro por registro e comparar se aparece a palavra no titulo e mostrar
+  while (fread(&livro,sizeof(livro),1,fplivro)==1){
+      if (strstr(livro.titulo,palavra)!=NULL){
+        achou++;
+        if (achou==1){
+          printf("\nCodigo Titulo                         Preco");
+        }
+        printf("\n%-6i %-30s %5.2f",livro.pklivro,livro.titulo, livro.preco);
+      }
+  }
+
+  if (achou==0){
+    printf("\nNenhum Livro Encontrado com a palavra %s no Titulo.",palavra);
+  }
+
+  //Fechar o Arquivo
+  fclose(fplivro);
+
+}//ConsultarLivroPalavraChaveNoTitulo
+
+
+
+void ExcluirCategoria(){
+  FILE *fpcategoria, *fpcategorianew;
+  struct reg_categoria categoria;
+  int cod, achou=0;
+  char opc;
+
+  printf("\nDigite o Codigo da Categoria a ser EXCLUIDA: ");
+  fflush(stdin); scanf("%i",&cod);
+
+  //Abrir o Arquivo
+  fpcategoria = fopen("categoria.dat","rb");
+
+  //Localizar o Livro que tenha o código procuradO
+  while ((achou==0)&&(fread(&categoria,sizeof(categoria),1,fpcategoria)==1)){
+    if (categoria.pkcategoria== cod){
+      printf("\nCodigo: %i",categoria.pkcategoria);
+      printf("\nTitulo: %s",categoria.descricaocategoria);
+      achou=1;
+    }
+  }
+
+    //Fechar o Arquivo
+    fclose(fpcategoria);
+
+
+//if (achou==0)
+  if (!achou){
+    printf("\n Categoria NAO Localizado!!");
+    return;
+  }
+
+  //Confirmar EXCLUSÃO
+  printf("\nConfirma Exclusao?(S/N) ");
+  fflush(stdin);  scanf("%c",&opc);
+  if ((opc!='S')&&(opc!='s')){
+    printf("\nEXCLUSAO Cancelada.");
+    return;
+  }
+
+  //Excluir o Registro da Categoria
+
+  //Copiar todos os registros (menos aquele a ser removido) para um arquivo temporario
+  fpcategoria = fopen("categoria.dat","rb");
+  fpcategorianew = fopen("categorianew.dat","wb");
+  while(fread(&categoria,sizeof(categoria),1,fpcategoria)==1){ //Le do arquivo original
+    if (categoria.pkcategoria!=cod)
+      fwrite(&categoria,sizeof(categoria),1,fpcategorianew); //Grava no arquivo temporario
+  }
+  fclose(fpcategoria);
+  fclose(fpcategorianew);
+
+  system("del categoria.dat"); //Remove o arquivo Original
+  system("ren categorianew.dat categoria.dat"); //Renomeia o temporario para o nome do Original
+
+  printf("\nCategoria Excluido com Sucesso.");
+}//Fim excluirCategoria()
+
+
+
 void ListarTodosEditoras(){
     FILE *fpeditora;
     struct reg_editora editora;
@@ -54,8 +150,8 @@ void ListarTodosEditoras(){
     while (fread(&editora,sizeof(editora),1,fpeditora)==1)
     {
         //Mostrar na Tela
-        printf("\n\n__________________________________________");
-        printf("\nRegistro Numero %i",a);
+        printf("\n\nRegistro Numero %i",a);
+        printf("\n__________________________________________");
         a++;
         printf("\nCodigo editora: %i",editora.pkeditora);
         printf("\nNome: %s",editora.nome);
@@ -81,8 +177,8 @@ void ListarTodasCategorias(){
     while (fread(&categoria,sizeof(categoria),1,fpcategoria)==1)
     {
         //Mostrar na Tela
-        printf("\n\n__________________________________________");
-        printf("\nRegistro Numero %i",a);
+        printf("\n\nRegistro Numero %i",a);
+        printf("\n__________________________________________");
         a++;
         printf("\nCodigo categoria %i",categoria.pkcategoria);
         printf("\nsobrenome: %s",categoria.descricaocategoria);
@@ -104,8 +200,8 @@ void ListarTodosAutores(){
     while (fread(&autor,sizeof(autor),1,fpautor)==1)
     {
         //Mostrar na Tela
+        printf("\n\nRegistro Numero %i",a);
         printf("\n__________________________________________");
-        printf("\nRegistro Numero %i",a);
         a++;
         printf("\nCodigo autor %i",autor.pkautor);
         printf("\nsobrenome: %s",autor.sobrenome);
@@ -130,8 +226,8 @@ void ListarTodosLivros()
     while (fread(&livro,sizeof(livro),1,fplivro)==1)
     {
         //Mostrar na Tela
-        printf("\n\n__________________________________________");
-        printf("\nRegistro Numero %i",a);
+        printf("\n\nRegistro Numero %i",a);
+        printf("\n__________________________________________");
         a++;
         printf("\nCodigo livro %i",livro.pklivro);
         printf("\n Titulo: %s",livro.titulo);
@@ -380,39 +476,6 @@ void consultarPeloTitulo(){
 
 }//Fim consultarPeloTitulo()
 
-void consultarPalavraTitulo(){
-  FILE *fplivro;
-  struct reg_livro livro;
-  char palavra[30];
-  int achou=0;
-
-
-  //Solcitar a Palavra-Chave
-  printf("\nDigite a Palavra-Chave: ");
-  fflush(stdin); gets(palavra);
-
-  //Abrir o Arquivo de Livros
-  fplivro = fopen("livro.dat","rb");
-
-  //Ler registro por registro e comparar se aparece a palavra no titulo e mostrar
-  while (fread(&livro,sizeof(livro),1,fplivro)==1){
-      if (strstr(livro.titulo,palavra)!=NULL){
-        achou++;
-        if (achou==1){
-          printf("\nCodigo Titulo                         Preco");
-        }
-        printf("\n%-6i %-30s %5.2f",livro.pklivro,livro.titulo, livro.preco);
-      }
-  }
-
-  if (achou==0){
-    printf("\nNenhum Livro Encontrado com a palavra %s no Titulo.",palavra);
-  }
-
-  //Fechar o Arquivo
-  fclose(fplivro);
-
-}//consultarPalavraTitulo()
 
 void ConsultarParteIncialNomeAutor(){
   FILE *fpautor;
@@ -514,65 +577,6 @@ void alterarLivro(){
 
 } //Fim alterarLivro()
 
-void excluirLivro(){
-  FILE *fplivro, *fplivrosnew;
-  struct reg_livro livro;
-  int cod, achou=0;
-  char opc;
-
-  //Solicitar o codigo do Livro a ser Excluido
-  printf("\nDigite o Codigo do Livro a ser EXCLUIDO: ");
-  fflush(stdin); scanf("%i",&cod);
-
-  //Abrir o Arquivo
-  fplivro = fopen("livro.dat","rb");
-
-  //Localizar o Livro que tenha o código procuradO
-  while ((achou==0)&&(fread(&livro,sizeof(livro),1,fplivro)==1)){
-    //printf("\nLivro->%i",livro.codigo);
-    if (livro.pklivro== cod){
-      printf("\nCodigo: %i",livro.pklivro);
-      printf("\nTitulo: %s",livro.titulo);
-      printf("\nPreco: %5.2f",livro.preco);
-      achou=1;
-    }
-  }
-
-    //Fechar o Arquivo
-    fclose(fplivro);
-
-
-  //if (achou==0)
-  if (!achou){
-    printf("\n Livro NAO Localizado!!");
-    return;
-  }
-
-  //Confirmar EXCLUSÃO
-  printf("\nConfirma Exclusao?(S/N) ");
-  fflush(stdin);  scanf("%c",&opc);
-  if ((opc!='S')&&(opc!='s')){
-    printf("\nEXCLUSAO Cancelada.");
-    return;
-  }
-
-  //Excluir o Registro do Livro
-
-  //Copiar todos os registros (menos aquele a ser removido) para um arquivo temporario
-  fplivro = fopen("livro.dat","rb");
-  fplivrosnew = fopen("livrosnew.dat","wb");
-  while(fread(&livro,sizeof(livro),1,fplivro)==1){ //Le do arquivo original
-    if (livro.pklivro!=cod)
-      fwrite(&livro,sizeof(livro),1,fplivrosnew); //Grava no arquivo temporario
-  }
-  fclose(fplivro);
-  fclose(fplivrosnew);
-
-  system("del livros.dat"); //Remove o arquivo Original
-  system("ren livrosnew.dat Livros.dat"); //Renomeia o temporario para o nome do Original
-
-  printf("\nLivro Excluido com Sucesso.");
-}//Fim excluirLvro()
 
 
 /*
@@ -737,7 +741,6 @@ void listarVendas(){
   struct reg_venda venda;
   struct reg_cliente cliente;
 
-
   //Abrir Arquivo de Vendas
   fpvendas = fopen(VENDAS,"rb");
 
@@ -810,32 +813,9 @@ void listarVendasTXT(){
 }//Fim listarVendasTXT()
 
 */
-/*
-void OLDlistarTodosAutores(){
-  FILE *fpautor;
-  struct reg_autor autor;
 
-  //Abrir o Arquivo
-  fpautor = fopen("autor.dat","rb");
-
-  printf("\n      * * *  Relatorio de Todos os Clientes  * * *\n");
-  printf("\nCodigo Nome                                Fone           Email                    ");
-  //Ler registro por registro
-  while (fread(&autor,sizeof(autor),1,fpautor)==1){
-    //Mostrar na Tela
-    printf("\n%-6i %-35s %-14s ",autor.pkautor,autor.nome,autor.sobrenome);
-  }
-
-
-  //Fechar arquivo
-  fclose(fpautor);
-
-}//Fim listarTodosClientes()
-
-*/
 
 main(){
-  int op;
 /*
   Cadastro de Livros, autores, categorias e editoras;
   Listar todos os Livros, Autores, Categorias e Editoras;
@@ -856,6 +836,7 @@ Observações:
   Entretanto, ao invés de listar na tela, este relatório deve ser impresso
   em um arquivo texto;
 */
+  int op;
   do{
 
     printf("\n\n    # # #  BIBLIOTECA DE ALEXANDRIA  # # # \n");
@@ -904,10 +885,10 @@ Observações:
             ListarTodosEditoras();//feito
             break;
         case 3:
-           // ExcluirCategoria();
+            ExcluirCategoria();//feito
             break;
         case 4:
-           // ConsultarLivroPalavraChaveNoTitulo();
+            ConsultarLivroPalavraChaveNoTitulo();
             break;
         case 5:
          //   ConsultarAutorParteInicialNome();

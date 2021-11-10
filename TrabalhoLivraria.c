@@ -42,9 +42,169 @@ struct reg_editora{
   char email[50];
 };
 
+
+void GeraRelatorioLivrosMaisCarosDaCategoria(){
+  FILE *fplivro;
+  struct reg_livro livro;
+  int querycodcategoria;
+  int achou=0;
+  float maiorpreco;
+  maiorpreco = 0;
+  printf("\nDigite o codigo da  Categoria: ");
+  fflush(stdin);
+  scanf("%i", &querycodcategoria);
+
+  //Abrir o Arquivo de Livros
+  fplivro = fopen("livro.dat","rb");
+
+  //Ler registro por registro e comparar se aparece
+    while (fread(&livro,sizeof(livro),1,fplivro)==1){
+        if (livro.codcategoria == querycodcategoria){
+            if(livro.preco > maiorpreco){
+                maiorpreco = livro.preco;
+            }
+            achou =1;
+        }
+    }
+    fclose(fplivro);
+    fplivro = fopen("livro.dat","rb");
+    while (fread(&livro,sizeof(livro),1,fplivro)==1){
+        if (livro.codcategoria == querycodcategoria){
+            if(livro.preco == maiorpreco){
+                printf("\n\n__________________________");
+                printf("\n Codigo do livro: %i",livro.pklivro);
+                printf("\n Titulo: %s",livro.titulo);
+                printf("\n Preco: %f",livro.preco);
+                printf("\n Codigo autor 1: %i",livro.codautor1);
+                printf("\n Codigo autor 2: %i",livro.codautor2);
+                printf("\n Codigo autor 3 %i",livro.codautor3);
+                printf("\n Codigo autor 4 %i",livro.codautor4);
+                printf("\n Codigo Categoria: %i",livro.codcategoria);
+                printf("\n Codigo editora: %i",livro.codeditora);
+                printf("\n Edicao: %i",livro.edicao);
+                printf("\n Ano: %i",livro.ano);
+                printf("\n Quantidade em estoque: %i",livro.qtdestoque);
+            }
+        }
+    }
+
+  if (achou==0){
+    printf("\nNenhum Livro Encontrado com o codigo dessa Categoria.");
+  }
+
+  //Fechar o Arquivo
+  fclose(fplivro);
+  char opc;
+  printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
+  fflush(stdin);
+  scanf("%c",&opc);
+}//RelatorioTodosLivrosAutor
+
+
+void RelatorioLivroPorCategoria(){
+  FILE *fplivro;
+  struct reg_livro livro;
+  int querycodcategoria;
+  int achou=0;
+
+  //Solcitar a Parte Inicial do Nome
+  printf("\nDigite o codigo da categoria: ");
+  fflush(stdin);
+  scanf("%i", &querycodcategoria);
+
+  //Abrir o Arquivo de Livros
+  fplivro = fopen("livro.dat","rb");
+
+
+  //Ler registro por registro e comparar se aparece
+  while (fread(&livro,sizeof(livro),1,fplivro)==1){
+      if (livro.codcategoria == querycodcategoria){
+        achou++;
+        printf("\n\n__________________________");
+        printf("\n Codigo do livro: %i",livro.pklivro);
+        printf("\n Titulo: %s",livro.titulo);
+        printf("\n Preco: %f",livro.preco);
+        printf("\n Codigo autor 1: %i",livro.codautor1);
+        printf("\n Codigo autor 2: %i",livro.codautor2);
+        printf("\n Codigo autor 3 %i",livro.codautor3);
+        printf("\n Codigo autor 4 %i",livro.codautor4);
+        printf("\n Codigo Categoria: %i",livro.codcategoria);
+        printf("\n Codigo editora: %i",livro.codeditora);
+        printf("\n Edicao: %i",livro.edicao);
+        printf("\n Ano: %i",livro.ano);
+        printf("\n Quantidade em estoque: %i",livro.qtdestoque);
+      }
+  }
+
+  if (achou==0){
+    printf("\nNenhum Livro Encontrado com o codigo dessa Categoria.");
+  }
+
+  //Fechar o Arquivo
+  fclose(fplivro);
+  char opc;
+  fflush(stdin);
+  scanf("%c",&opc);
+}//GeraRelatorioLivrosMaisCarosDaCategoria
+
+
 void GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade(){
+  FILE *fplivro, *fprellivrotxt;
+  struct reg_livro livro;
+  char saida[200];
+  int qtdpesquisa;
 
 
+  //Abrir Arquivo de Vendas
+  fplivro = fopen("livro.dat","rb");
+  fprellivrotxt = fopen("RelatorioLivrosBaixoEstoque.txt","w");
+  printf("\n Sera gerado arquivo texto com livros abaixo da quantidade inserida. \nDigite o Valor da pesquisa: ");
+  scanf("%i", &qtdpesquisa);
+  //Ler registro por registro e gravar no arquivo texto
+  while (fread(&livro,sizeof(livro),1,fplivro)==1){
+    if (livro.qtdestoque < qtdpesquisa){ //Cliente NÃO localizado
+        sprintf(saida,"\n\n__________________________________");
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codigo Livro: %i",livro.pklivro);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Titulo Livro: %s",livro.titulo);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Preco Livro: %f",livro.preco);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codautor1 Livro: %i",livro.codautor1);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codautor2 Livro: %i",livro.codautor2);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codautor3 Livro: %i",livro.codautor3);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codautor4 Livro: %i",livro.codautor4);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codcategoria Livro: %i",livro.codcategoria);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Codeditora Livro: %i",livro.codeditora);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Edicao Livro: %i",livro.edicao);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Ano Livro: %i",livro.ano);
+        fputs(saida,fprellivrotxt);
+        sprintf(saida,"\n Qtdestoque Livro: %i",livro.qtdestoque);
+        fputs(saida,fprellivrotxt);
+
+    }
+
+    //printf("%s",saida);
+
+  }
+
+
+  //Fechar Arquivo de Vendas
+  fclose(fplivro);
+  fclose(fprellivrotxt);
+
+  printf("\nRelatorio de Livros, com estoque baixo do valor pesquisado, gravado no Arquivo Texto com Sucesso.\n[PRESSIONE ENTER PARA CONTINUAR]");
+  char opc;
+  fflush(stdin);
+  scanf("%c",&opc);
 
 }//GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade
 
@@ -80,16 +240,20 @@ void RelatorioTodosLivrosAutor(){
   }
 
   if (achou==0){
-    printf("\nNenhum Livro Encontrado com o codigo dessa Categoria.");
+    printf("\nNenhum Livro Encontrado com o codigo desse Autor.");
   }
 
   //Fechar o Arquivo
   fclose(fplivro);
   char opc;
+  printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
   fflush(stdin);
   scanf("%c",&opc);
 }//RelatorioTodosLivrosAutor
-void RelatorioLivroPorCategoria(){
+
+
+
+void RelatorioDeLivroPorCategoria(){
   FILE *fplivro;
   struct reg_livro livro;
   int querycodcategoria;
@@ -122,11 +286,14 @@ void RelatorioLivroPorCategoria(){
 
   //Fechar o Arquivo
   fclose(fplivro);
-  char opc;
+
+char opccv;
   fflush(stdin);
-  scanf("%c",&opc);
+  printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
+  scanf("%c",&opccv);
 
 }//Fim RelatorioLivroPorCategoria
+
 
 void ConsultarAutorParteInicialNome(){
   FILE *fpautor;
@@ -161,6 +328,7 @@ void ConsultarAutorParteInicialNome(){
   fclose(fpautor);
   char opc;
   fflush(stdin);
+  printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
   scanf("%c",&opc);
 }//Fim ConsultarAutorParteInicialNome()
 
@@ -195,6 +363,7 @@ void ConsultarLivroPalavraChaveNoTitulo(){
   //Fechar o Arquivo
   fclose(fplivro);
     char opc;
+    printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
     fflush(stdin);
     scanf("%c",&opc);
 }//ConsultarLivroPalavraChaveNoTitulo
@@ -256,7 +425,10 @@ void ExcluirCategoria(){
   system("ren categorianew.dat categoria.dat"); //Renomeia o temporario para o nome do Original
 
   printf("\nCategoria Excluido com Sucesso.");
-
+    printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
+    char opcc;
+    fflush(stdin);
+    scanf("%c",&opcc);
 }//Fim excluirCategoria()
 
 
@@ -283,6 +455,7 @@ void ListarTodosEditoras(){
     }
     //Fechar arquivo
     fclose(fpeditora);
+     printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
     char opc;
     fflush(stdin);
     scanf("%c",&opc);
@@ -307,10 +480,13 @@ void ListarTodasCategorias(){
     }
     //Fechar arquivo
     fclose(fpcategoria);
+     printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
     char opc;
     fflush(stdin);
     scanf("%c",&opc);
 }//Fim ListarTodasCategorias
+
+
 void ListarTodosAutores(){
     FILE *fpautor;
     struct reg_autor autor;
@@ -331,6 +507,7 @@ void ListarTodosAutores(){
     }
     //Fechar arquivo
     fclose(fpautor);
+ printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
     char opc;
     fflush(stdin);
     scanf("%c",&opc);
@@ -351,7 +528,7 @@ void ListarTodosLivros()
         printf("\n\nRegistro Numero %i",a);
         printf("\n__________________________________________");
         a++;
-        printf("\nCodigo livro %i",livro.pklivro);
+        printf("\n Codigo do livro: %i",livro.pklivro);
         printf("\n Titulo: %s",livro.titulo);
         printf("\n Preco: %f",livro.preco);
         printf("\n Codigo autor 1: %i",livro.codautor1);
@@ -366,6 +543,7 @@ void ListarTodosLivros()
     }
     //Fechar arquivo
     fclose(fplivro);
+ printf("\n[PRESSIONE ENTER PARA CONTINUAR]");
     char opc;
     fflush(stdin);
     scanf("%c",&opc);
@@ -983,7 +1161,7 @@ Observações:
             ConsultarAutorParteInicialNome();
             break;
         case 6:
-            RelatorioLivroPorCategoria();
+            RelatorioDeLivroPorCategoria();
             break;
         case 7:
             RelatorioTodosLivrosAutor();
@@ -992,7 +1170,7 @@ Observações:
             GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade();
             break;
         case 9:
-           // RetornaRelatorioLivrosMaisCarosDaCategoria();
+            GeraRelatorioLivrosMaisCarosDaCategoria();
             break;
 
     }

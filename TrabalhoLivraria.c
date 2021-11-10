@@ -2,8 +2,6 @@
 #include <string.h>
 #include <time.h>
 
-
-
 /*código, título, preço, código do autor1, código do autor2,
 código do autor3, código do autor4, código da categoria (assunto),
 código da editora, edição, ano de publicação e quantidade em estoque
@@ -44,6 +42,128 @@ struct reg_editora{
   char email[50];
 };
 
+void GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade(){
+
+
+
+}//GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade
+
+void RelatorioTodosLivrosAutor(){
+  FILE *fplivro;
+  struct reg_livro livro;
+  int querycodcategoria;
+  int achou=0;
+
+  //Solcitar a Parte Inicial do Nome
+  printf("\nDigite o codigo do Autor: ");
+  fflush(stdin);
+  scanf("%i", &querycodcategoria);
+
+  //Abrir o Arquivo de Livros
+  fplivro = fopen("livro.dat","rb");
+
+
+  //Ler registro por registro e comparar se aparece
+  while (fread(&livro,sizeof(livro),1,fplivro)==1){
+      if (livro.codautor1 == querycodcategoria || livro.codautor2 == querycodcategoria|| livro.codautor3 == querycodcategoria|| livro.codautor4 == querycodcategoria){
+        achou++;
+        printf("\n\n__________________________");
+        printf("\n Codigo: %i",livro.pklivro);
+        printf("\n Titulo: %s",livro.titulo);
+        printf("\n Preco: %i",livro.preco);
+        printf("\n Codautor1: %i",livro.codautor1);
+        printf("\n Codautor2: %i",livro.codautor2);
+        printf("\n Codautor3: %i",livro.codautor3);
+        printf("\n Codautor4: %i",livro.codautor4);
+        printf("\n Editora: %i",livro.codeditora);
+      }
+  }
+
+  if (achou==0){
+    printf("\nNenhum Livro Encontrado com o codigo dessa Categoria.");
+  }
+
+  //Fechar o Arquivo
+  fclose(fplivro);
+  char opc;
+  fflush(stdin);
+  scanf("%c",&opc);
+}//RelatorioTodosLivrosAutor
+void RelatorioLivroPorCategoria(){
+  FILE *fplivro;
+  struct reg_livro livro;
+  int querycodcategoria;
+  int achou=0;
+
+  //Solcitar a Parte Inicial do Nome
+  printf("\nDigite o codigo da categoria: ");
+  fflush(stdin);
+  scanf("%i", &querycodcategoria);
+
+  //Abrir o Arquivo de Livros
+  fplivro = fopen("livro.dat","rb");
+
+
+  //Ler registro por registro e comparar se aparece
+  while (fread(&livro,sizeof(livro),1,fplivro)==1){
+      if (livro.codcategoria == querycodcategoria){
+        achou++;
+        printf("\n\n__________________________");
+        printf("\n Codigo: %i",livro.pklivro);
+        printf("\nTitulo: %s",livro.titulo);
+        printf("\nPreco: %i",livro.preco);
+        printf("\nEditora: %i",livro.codeditora);
+      }
+  }
+
+  if (achou==0){
+    printf("\nNenhum Livro Encontrado com o codigo dessa Categoria.");
+  }
+
+  //Fechar o Arquivo
+  fclose(fplivro);
+  char opc;
+  fflush(stdin);
+  scanf("%c",&opc);
+
+}//Fim RelatorioLivroPorCategoria
+
+void ConsultarAutorParteInicialNome(){
+  FILE *fpautor;
+  struct reg_autor autor;
+  char parteinicial[30];
+  int achou=0;
+
+
+  //Solcitar a Parte Inicial do Nome
+  printf("\nDigite a parte inicial do Nome: ");
+  fflush(stdin); gets(parteinicial);
+
+  //Abrir o Arquivo de Livros
+  fpautor = fopen("autor.dat","rb");
+
+  //Ler registro por registro e comparar se aparece a PARTE INICIAL DO NOME
+  while (fread(&autor,sizeof(autor),1,fpautor)==1){
+      if (strncmp(autor.nome,parteinicial,strlen(parteinicial))==0){
+        achou++;
+        if (achou==1){
+          printf("\Codigo Autor  Nome   Sobrenome");
+        }
+        printf("\n%i %s %s",autor.pkautor,autor.nome,autor.sobrenome);
+      }
+  }
+
+  if (achou==0){
+    printf("\nNenhum Cliente Encontrado com esta parte Inicial do Nome.");
+  }
+
+  //Fechar o Arquivo
+  fclose(fpautor);
+  char opc;
+  fflush(stdin);
+  scanf("%c",&opc);
+}//Fim ConsultarAutorParteInicialNome()
+
 void ConsultarLivroPalavraChaveNoTitulo(){
   FILE *fplivro;
   struct reg_livro livro;
@@ -57,7 +177,6 @@ void ConsultarLivroPalavraChaveNoTitulo(){
 
   //Abrir o Arquivo de Livros
   fplivro = fopen("livro.dat","rb");
-
   //Ler registro por registro e comparar se aparece a palavra no titulo e mostrar
   while (fread(&livro,sizeof(livro),1,fplivro)==1){
       if (strstr(livro.titulo,palavra)!=NULL){
@@ -75,7 +194,9 @@ void ConsultarLivroPalavraChaveNoTitulo(){
 
   //Fechar o Arquivo
   fclose(fplivro);
-
+    char opc;
+    fflush(stdin);
+    scanf("%c",&opc);
 }//ConsultarLivroPalavraChaveNoTitulo
 
 
@@ -135,6 +256,7 @@ void ExcluirCategoria(){
   system("ren categorianew.dat categoria.dat"); //Renomeia o temporario para o nome do Original
 
   printf("\nCategoria Excluido com Sucesso.");
+
 }//Fim excluirCategoria()
 
 
@@ -477,39 +599,6 @@ void consultarPeloTitulo(){
 }//Fim consultarPeloTitulo()
 
 
-void ConsultarParteIncialNomeAutor(){
-  FILE *fpautor;
-  struct reg_autor autor;
-  char parteinicial[30];
-  int achou=0;
-
-
-  //Solcitar a Parte Inicial do Nome
-  printf("\nDigite a parte inicial do Nome: ");
-  fflush(stdin); gets(parteinicial);
-
-  //Abrir o Arquivo de Livros
-  fpautor = fopen("autor.dat","rb");
-
-  //Ler registro por registro e comparar se aparece a PARTE INICIAL DO NOME
-  while (fread(&autor,sizeof(autor),1,fpautor)==1){
-      if (strncmp(autor.nome,parteinicial,strlen(parteinicial))==0){
-        achou++;
-        if (achou==1){
-          printf("\Codigo Nome                                Fone           Email               ");
-        }
-        printf("\n%-6i %-35s %-14s %-20s",autor.pkautor,autor.nome,autor.sobrenome);
-      }
-  }
-
-  if (achou==0){
-    printf("\nNenhum Cliente Encontrado com esta parte Inicial do Nome.");
-  }
-
-  //Fechar o Arquivo
-  fclose(fpautor);
-
-}//Fim consultarParteIncialNomeCliente()
 
 void alterarLivro(){
   FILE *fplivro;
@@ -891,16 +980,16 @@ Observações:
             ConsultarLivroPalavraChaveNoTitulo();
             break;
         case 5:
-         //   ConsultarAutorParteInicialNome();
+            ConsultarAutorParteInicialNome();
             break;
         case 6:
-         //   RelatorioLivroCategoria();
+            RelatorioLivroPorCategoria();
             break;
         case 7:
-         //   RelatorioTodosLivrosAutor();
+            RelatorioTodosLivrosAutor();
             break;
         case 8:
-          //  GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade();
+            GeraRelatorioArquivoTextoLivrosEstoqueAbaixoDeterminadaQuantidade();
             break;
         case 9:
            // RetornaRelatorioLivrosMaisCarosDaCategoria();
